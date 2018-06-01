@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chero.client.dao.SystemRoleRepository">
+    <resultMap id="systemRoleMap" type="com.chero.client.domain.SystemRole">
+        <id column="roleId" property="roleId"/>
+        <result column="role" property="role"/>
+        <result column="status" property="status"/>
+        <result column="privilege_management" property="privilegeManagement"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="delete_flag" property="deleteFlag"/>
+        <result column="remarks" property="remarks"/>
+    </resultMap>
+    <select id="findById" parameterType="java.lang.String" resultMap="systemRoleMap">
+    	select * from db_system_role where role_id=#{roleId}
+    </select>
+    <select id="findSystemRoleByRoleId" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select role from db_system_role where role_id=#{roleId}
+    </select>
+    <insert id="saveUserRole" parameterType="java.lang.Integer">
+        insert into sys_user_role(user_id,role_id) values(#{id},2)
+    </insert>
+</mapper>

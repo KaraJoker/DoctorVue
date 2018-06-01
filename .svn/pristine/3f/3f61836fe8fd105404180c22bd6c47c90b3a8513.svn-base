@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chero.client.dao.MessageRepository">
+    <resultMap id="messageMap" type="com.chero.client.domain.Message">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="origin" property="origin"/>
+        <result column="content" property="content"/>
+        <result column="type" property="type"/>
+        <result column="is_reading" property="isReading"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="extend_1" property="extend1"/>
+        <result column="extend_2" property="extend2"/>
+        <result column="extend_3" property="extend3"/>
+        <result column="delete_flag" property="deleteFlag"/>
+        <result column="remarks" property="remarks"/>
+    </resultMap>
+    <resultMap id="messageSettingMap" type="MessageSetting">
+        <id column="user_id" property="userId"/>
+        <result column="notification" property="notification"/>
+        <result column="announcement" property="announcement"/>
+        <result column="receive_method" property="receiveMethod"/>
+    </resultMap>
+    <select id="findOneAllMessageByCondition" resultType="UserMessage">
+        SELECT
+        um.to_user_id, um.from_user_id, um.from_real_name, um.msg_id, um.msg_type, um.is_reading,
+        m.title, m.origin, m.content, m.create_user, m.create_time, m.update_user, m.update_time, m.delete_flag,
+        m.orgnazation_id
+        FROM db_user_message AS um, db_system_message AS m
+        WHERE
+        um.to_user_id = #{userId}
+        AND
+        um.msg_id = m.id
+        AND
+        m.delete_flag = 0
+        AND
+        m.orgnazation_id = #{orgnazationId}
+        <if test="msgType !=null">
+            AND um.msg_type = #{msgType}
+        </if>
+        <if test="isReading !=null">
+            AND um.is_reading = #{isReading}
+        </if>
+    </select>
+    <select id="findUnSendAnnouncement" resultType="java.lang.Integer">
+        SELECT m.id
+        FROM  db_system_message AS m
+        WHERE
+        m.is_send = 0
+        AND
+        m.send_time &lt;= #{nowTime}
+    </select>
+    <select id="findAnnouncementByCondition" resultType="Message">
+        SELECT
+        m.id, m.type, m.title, m.origin,
+        m.content, m.is_send,
+        m.create_user, m.create_time,
+        m.update_user, m.update_time
+        FROM db_system_message AS m
+        WHERE
+        m.delete_flag = 0
+        AND
+        m.type =1
+        AND
+        m.orgnazation_id = #{orgnazationId}
+        <if test="title != null and title != ''">
+            AND m.title LIKE %#{title}%
+        </if>
+        <if test="fromTime != null">
+            AND m.send_time >= #{startTime}
+        </if>
+        <if test="toTime != null">
+            AND um.send_time &lt;= #{endTime}
+        </if>
+    </select>
+    <insert id="addMessage">
+        <selectKey keyProperty="id" resultType="string" order="BEFORE">
+            select replace(uuid(), '-', '') as id from dual
+        </selectKey>
+        INSERT INTO db_system_message(
+        id,
+        title,
+        origin,
+        content,
+        type,
+        people_number,
+        orgnazation_id,
+        is_send,
+        from_user_id,
+        create_user,
+        create_time,
+        update_user,
+        update_time,
+        delete_flag
+        )
+        VALUES(
+        #{id},
+        #{title},
+        #{origin},
+        #{content},
+        #{type},
+        #{peopleNumber},
+        #{orgnazationId},
+        #{isSend},
+        #{fromUserId},
+        #{createUser},
+        #{createTime},
+        #{updateUser},
+        #{updateTime},
+        #{deleteFlag}
+        )
+    </insert>
+
+    <update id="updateAnnouncement" parameterType="Message">
+        UPDATE db_system_message
+        <set>
+            update_user = #{updateUser},
+            update_time = #{updateTime},
+            <if test="title != null and title != ''">`title` = #{title},</if>
+            <if test="sendTime != null">`send_time` = #{sendTime},</if>
+            <if test="content != null and content != ''">`content` = #{content}</if>
+        </set>
+        WHERE
+        id = #{id}
+        AND
+        orgnazation_id = 'GUO_REN'
+        AND
+        type = 1
+        AND
+        is_send = 0
+    </update>
+    <insert id="sendAnnouncement">
+        insert into db_user_message(
+          msg_id,
+          msg_type,
+          is_reading,
+          orgnazation_id,
+          to_user_id
+        )
+        values
+
+        <foreach collection="toUserIds" item="itm" index="index" separator=",">
+        (
+        #{msgId},
+        1,
+        0,
+        #{orgnazationId},
+        #{itm}
+        )
+        </foreach>
+    </insert>
+    <update id="setMessageIsSend">
+        UPDATE db_system_message
+        SET
+        is_send = 1
+        AND
+        people_number = #{peopleNumber}
+        WHERE id IN
+        <foreach item="item" index="index" collection="msgIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="messageMarkup" parameterType="com.chero.client.domain.Message">
+        UPDATE db_user_message
+        SET is_reading = 1
+        WHERE to_user_id = #{userId} AND msg_id IN
+        <foreach item="item" index="index" collection="msgIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    <delete id="deleteOneAllMessage">
+        DELETE FROM db_user_message WHERE to_user_id = #{userId} AND msg_id IN
+        <foreach item="item" index="index" collection="msgIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="findMessageSettingByUserId" parameterType="java.lang.String" resultMap="messageSettingMap">
+        SELECT user_id, notification, announcement, receive_method FROM db_system_message_setting WHERE user_id = #{userId}
+    </select>
+    <insert id="saveMessageSetting" parameterType="MessageSetting">
+        INSERT INTO db_system_message_setting(user_id,notification, announcement ,receive_method)
+        VALUES (#{userId}, #{notification}, #{announcement}, #{receiveMethod})
+    </insert>
+    <update id="updateMessageSetting" parameterType="MessageSetting">
+        UPDATE db_system_message_setting
+        <set>
+            <if test="notification != null">`notification` = #{notification},</if>
+            <if test="announcement != null">`announcement` = #{announcement},</if>
+            <if test="receiveMethod != null">`receive_method` = #{receiveMethod},</if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+</mapper>

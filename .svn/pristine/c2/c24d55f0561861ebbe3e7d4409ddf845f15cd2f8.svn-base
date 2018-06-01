@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chero.client.dao.DoctorReviewRepository">
+<resultMap id="DoctorReviewMap" type="com.chero.client.domain.DoctorReview">
+    <id column="id" property="id"/>
+    <result column="user_id" property="userId"/>
+    <result column="review_id" property="reviewId"/>
+    <result column="review_name" property="reviewName"/>
+    <result column="review_state" property="reviewState"/>
+    <result column="review_remark" property="reviewRemark"/>
+    <result column="create_user" property="createUser"/>
+    <result column="create_time" property="createTime"/>
+    <result column="update_user" property="updateUser"/>
+    <result column="update_time" property="updateTime"/>
+    <result column="certificate_type" property="certificateType"/>
+    <result column="certificate_number" property="certificateNumber"/>
+    <result column="department_id" property="departmentId"/>
+    <result column="user_real_name" property="userRealName"/>
+    <result column="id_certificate_photo" property="idCertificatePhoto"/>
+    <result column="id_certificate_photo" property="idCertificatePhoto"/>
+    <result column="registration_certificate_photo" property="registrationCertificatePhoto"/>
+    <result column="title_certificate_photo" property="titleCertificatePhoto"/>
+    <result column="subject" property="subject"/>
+    <result column="position" property="position"/>
+</resultMap>
+<select id="findReportListByConditionUser" parameterType="java.lang.String" resultType="com.chero.client.domain.DoctorReview">
+		select * from db_doctor_review where id=#{id}
+</select>
+
+    <select id="findDoctorReviewList" resultMap="DoctorReviewMap">
+        select * FROM
+        db_doctor_review as dr
+        LEFT JOIN db_doctor_info as di
+        ON dr.user_id=di.user_id
+        WHERE  dr.review_state = 0
+        <if test="userAccount != null and userAccount!=''"   >AND user_account LIKE '%${userAccount}%'</if>
+        <if test="startTime != null">AND create_time >= #{startTime}</if>
+        <if test="endTime != null">AND create_time &lt;= #{endTime}</if>
+    </select>
+
+    <select id="findDoctorReviewFinishList" resultMap="DoctorReviewMap">
+        select * FROM
+        db_doctor_review as dr
+        LEFT JOIN db_doctor_info as di
+        ON dr.user_id=di.user_id
+        WHERE  dr.review_state != 0
+        <if test="startTime != null and startTime!=''">and dr.create_time >= #{startTime}</if>
+        <if test="endTime != null and endTime!=''">and dr.create_time &lt;= #{endTime}</if>
+        <if test="reviewState != null and reviewState!=''">and dr.review_state &lt;= #{reviewState}</if>
+    </select>
+
+    <select id="findDoctorReviewUserList" resultMap="DoctorReviewMap">
+        select * FROM
+        db_doctor_review as dr
+        LEFT JOIN db_doctor_info as di
+        ON dr.user_id=di.user_id WHERE dr.user_id = #{userId}
+    </select>
+
+    <select id="findDoctorReviewState" resultMap="DoctorReviewMap">
+        SELECT * FROM
+        db_doctor_review as dr
+        LEFT JOIN db_doctor_info as di
+        ON dr.user_id=di.user_id
+        WHERE dr.user_id = #{userId}
+        ORDER BY dr.create_time DESC
+        LIMIT 1
+
+    </select>
+
+    <select id="findOne" resultMap="DoctorReviewMap">
+        select * from db_doctor_review WHERE id =  #{Id}
+    </select>
+    <update id="updataDoctorReview" parameterType="com.chero.client.domain.DoctorReview" >
+        update db_doctor_review
+        <set>
+            <if test="id != null">`id` = #{id},</if>
+            <if test="reviewId != null and reviewId != ''">`review_id` = #{reviewId},</if>
+            <if test="userId != null and userId != ''">`user_id` = #{userId},</if>
+            <if test="reviewId != null and reviewId != ''">`review_id` = #{reviewId},</if>
+            <if test="reviewName != null and reviewName != ''">`review_name` = #{reviewName},</if>
+            <if test="reviewState != null">`review_state` = #{reviewState},</if>
+            <if test="reviewRemark != null and reviewRemark != ''">`review_remark` = #{reviewRemark},</if>
+            <if test="updateUser != null and updateUser != ''">`update_user` = #{updateUser},</if>
+            <if test="updateTime != null">`update_time` = #{updateTime},</if>
+            <if test="departmentId != null">`department_id` = #{departmentId},</if>
+            <if test="registrationCertificatePhoto != null and registrationCertificatePhoto != ''">`registration_certificate_photo` = #{registrationCertificatePhoto},</if>
+            <if test="titleCertificatePhoto != null and titleCertificatePhoto != ''">`title_certificate_photo` = #{titleCertificatePhoto},</if>
+            <if test="departmentId != null and departmentId != ''">`department_id` = #{departmentId},</if>
+            <if test="subject != null and subject != ''">`subject` = #{subject},</if>
+            <if test="position != null and position != ''">`position` = #{position},</if>
+            <if test="updateUser != null and updateUser != ''">`update_user` = #{updateUser},</if>
+            <if test="updateTime != null">`update_time` = #{updateTime},</if>
+        </set>
+        WHERE  id=#{id}
+    </update>
+<update id="updateUser" parameterType="com.chero.client.domain.DoctorReview">
+		update db_doctor_review
+		set
+		review_id=#{reviewId},
+		review_remark=#{reviewRemark},
+		review_state=#{reviewState}
+		where
+		id=#{id}
+</update>
+<insert id="addDoctorReview" parameterType="com.chero.client.domain.DoctorReview">
+        insert into db_doctor_review(
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+        select replace(uuid(), '-', '') as id from dual
+    </selectKey>
+        id,
+        create_user,
+        create_time,
+        user_id,
+        user_real_name,
+        certificate_type,
+        certificate_number,
+        id_certificate_photo,
+        delete_flag,
+        review_state
+        )
+        values(
+        #{id},
+        #{createUser},
+        #{createTime},
+        #{userId},
+        #{userRealName},
+        #{certificateType},
+        #{certificateNumber},
+        #{idCertificatePhoto},
+        #{deleteFlag},
+        #{reviewState}
+        )
+</insert>
+</mapper>

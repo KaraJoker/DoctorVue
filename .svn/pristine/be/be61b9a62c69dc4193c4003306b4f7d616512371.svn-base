@@ -1,0 +1,433 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : 127.0.0.1
+ Source Server Type    : MySQL
+ Source Server Version : 50721
+ Source Host           : localhost:3306
+ Source Schema         : doctorinfo
+
+ Target Server Type    : MySQL
+ Target Server Version : 50721
+ File Encoding         : 65001
+
+ Date: 24/04/2018 10:02:32
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for db_doctor_info
+-- ----------------------------
+DROP TABLE IF EXISTS `db_doctor_info`;
+CREATE TABLE `db_doctor_info`  (
+  `id` int(64) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `create_user` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_user` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `extend_1` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `extend_2` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `extend_3` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `delete_flag` int(11) NULL DEFAULT NULL COMMENT '删除标记',
+  `remarks` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `real_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '真实姓名',
+  `mobile` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机号',
+  `userface` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '头像',
+  `name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '医生姓名',
+  `gender` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '性别',
+  `birthday` date NULL DEFAULT NULL COMMENT '出生日期',
+  `idCard` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '身份证号',
+  `subject` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '科室（所在部门）',
+  `position` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '岗位',
+  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '人员状态',
+  `operation` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作',
+  `certificate_type` int(11) NULL DEFAULT NULL COMMENT '证件类型',
+  `certificate_number` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '证件号码',
+  `id_certificate_photo` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '证件照片',
+  `registration_certificate_photo` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '医师执业注册证',
+  `title_certificate_photo` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '医生职称证',
+  `certificate_status` int(11) NULL DEFAULT NULL COMMENT '认证状态',
+  `hospital_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '医院id',
+  `user_id` int(64) NULL DEFAULT NULL COMMENT '用户关联id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '医生信息表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of db_doctor_info
+-- ----------------------------
+INSERT INTO `db_doctor_info` VALUES (1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '张三丰', '17600336251', '/userface/49bf961bbc684a88aaca248ba3482895.jpg', 'eeeeeeeeeee', '男', NULL, '411526199209095178', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 21);
+INSERT INTO `db_doctor_info` VALUES (2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '李四', '18268075654', '/userface/59de2aab5bf0499a9f13970e0e46de14.jpg', 'wwww', '男', NULL, '612422199505244411', 'dfsf', 'sdfdf', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+-- ----------------------------
+-- Table structure for db_order
+-- ----------------------------
+DROP TABLE IF EXISTS `db_order`;
+CREATE TABLE `db_order`  (
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'id',
+  `create_user` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_user` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `extend_1` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `extend_2` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `extend_3` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `delete_flag` int(11) NULL DEFAULT NULL COMMENT '删除标记',
+  `remarks` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `main_user_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '关联用户（关联圈）',
+  `order_amount` decimal(8, 2) NULL DEFAULT NULL COMMENT '总金额',
+  `order_status` tinyint(4) NULL DEFAULT NULL COMMENT '订单状态',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for db_product
+-- ----------------------------
+DROP TABLE IF EXISTS `db_product`;
+CREATE TABLE `db_product`  (
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `create_user` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_user` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `extend_1` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `extend_2` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `extend_3` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `delete_flag` int(11) NULL DEFAULT NULL COMMENT '删除标记',
+  `remarks` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `category_type` int(11) NULL DEFAULT NULL COMMENT '类目编号',
+  `product_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品名称',
+  `product_price` decimal(8, 2) NULL DEFAULT NULL COMMENT '商品价格',
+  `product_description` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品描述',
+  `product_specification` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品规格',
+  `product_usage_count` int(11) NULL DEFAULT NULL COMMENT '使用次数',
+  `product_range` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '使用范围',
+  `product_valid` int(11) NULL DEFAULT NULL COMMENT '有效期(天数)',
+  `product_service` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '服务',
+  `product_keyword` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '关键字',
+  `product_growth_value` int(11) NULL DEFAULT NULL COMMENT '赠送等级成长值',
+  `product_bonus` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '赠送服务',
+  `product_purchase_limitation` int(11) NULL DEFAULT NULL COMMENT '商品限购',
+  `product_vip_price` decimal(8, 2) NULL DEFAULT NULL COMMENT 'vip价格',
+  `product_detail_pc` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品详情电脑端',
+  `product_detail_mobile` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品详情移动端',
+  `product_stock` int(11) NULL DEFAULT NULL COMMENT '商品库存',
+  `product_icon` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品小图',
+  `product_status` tinyint(4) NULL DEFAULT NULL COMMENT '商品状态（0默认下架）',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for db_product_category
+-- ----------------------------
+DROP TABLE IF EXISTS `db_product_category`;
+CREATE TABLE `db_product_category`  (
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `create_user` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_user` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `extend_1` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `extend_2` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `extend_3` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `delete_flag` int(11) NULL DEFAULT NULL COMMENT '删除标记',
+  `remarks` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `category_type` int(11) NULL DEFAULT NULL COMMENT '类目编号',
+  `category_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类目名字',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品类目表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for db_report_unscramble
+-- ----------------------------
+DROP TABLE IF EXISTS `db_report_unscramble`;
+CREATE TABLE `db_report_unscramble`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `report_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '报告名称',
+  `report_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '报告类型',
+  `patient_account` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '患者账号',
+  `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
+  `gender` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '性别',
+  `age` int(11) NULL DEFAULT NULL COMMENT '年龄',
+  `report_time` datetime(0) NULL DEFAULT NULL COMMENT '报告时间',
+  `finish_time` datetime(0) NULL DEFAULT NULL COMMENT '完成时间',
+  `timeliness` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '解读及时性',
+  `reader` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '解读人',
+  `operation` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作',
+  `user_id` int(64) NULL DEFAULT NULL COMMENT '用户关联id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of db_report_unscramble
+-- ----------------------------
+INSERT INTO `db_report_unscramble` VALUES (1, 'report-1210', '睡眠报告', '18668075654', 'Outcaster', '男', 26, '2018-04-17 18:23:59', '2018-04-19 18:24:02', '超时', 'Outcaster', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (2, 'report-1211', '体温报告', '18668075654', 'KaraJoker', '男', 26, '2018-04-17 18:23:59', '2018-04-18 18:24:02', '超时', 'Outcaster', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (3, 'report-1212', '心电报告', '18668075654', 'JarGon', '男', 26, '2018-04-17 18:23:59', '2018-04-17 04:24:02', '及时', 'Outcaster', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (4, 'report-1213', '心电报告', '18668075654', 'AllenEason', '男', 26, '2018-04-17 18:23:59', '2018-04-17 06:24:02', '及时', 'Outcaster', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (5, 'report-1214', '心电报告', '18668075654', '庾骏', '男', 26, '2018-04-17 18:23:59', '2018-04-20 04:24:02', '超时', 'KaraJoker', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (6, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2018-04-17 18:23:59', '2018-04-18 04:24:02', '超时', 'KaraJoker', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (7, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2018-04-17 18:23:59', '2018-04-18 04:24:02', '超时', 'KaraJoker', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (8, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2018-01-17 18:23:59', '2018-01-18 04:24:02', '超时', 'JarGon', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (9, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2018-02-17 18:23:59', '2018-02-18 04:24:02', '超时', 'JarGon', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (10, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2018-03-17 18:23:59', '2018-03-18 04:24:02', '超时', 'JarGon', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (11, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2018-04-17 18:23:59', '2018-03-18 04:24:02', '超时', 'JarGon', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (12, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2018-03-17 18:23:59', '2018-01-18 04:24:02', '超时', 'JarGon', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (13, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2018-03-17 18:23:59', '2018-04-18 04:24:02', '超时', 'Allen', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (14, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2018-02-17 18:23:59', '2018-02-18 04:24:02', '超时', 'Allen', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (15, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2018-01-17 18:23:59', '2018-01-18 04:24:02', '超时', 'Allen', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (16, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2018-03-17 18:23:59', '2018-03-18 04:24:02', '超时', '戴良', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (17, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2018-04-17 18:23:59', '2018-02-18 04:24:02', '超时', '戴良', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (18, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2017-01-17 18:23:59', '2017-01-18 04:24:02', '超时', '戴良', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (19, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2017-04-17 18:23:59', '2018-04-19 04:24:02', '超时', '戴良', '查看详情', 21);
+INSERT INTO `db_report_unscramble` VALUES (20, 'report-1215', '心电报告', '18668075654', '王五', '男', 26, '2017-04-17 18:23:59', '2017-04-18 04:24:02', '超时', '戴良', '查看详情', 21);
+
+-- ----------------------------
+-- Table structure for db_system_department
+-- ----------------------------
+DROP TABLE IF EXISTS `db_system_department`;
+CREATE TABLE `db_system_department`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `department_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '部门名称',
+  `parent_id` int(11) NULL DEFAULT NULL COMMENT '父id',
+  `principle` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '负责人',
+  `department_phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '部门电话',
+  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态',
+  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '地址',
+  `remarks` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `operation` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of db_system_department
+-- ----------------------------
+INSERT INTO `db_system_department` VALUES (1, '浙江智柔科技有限公司', 0, '张三丰', '0571-86868866', '启用', '4号楼802室', '英文名CheRo', '编辑删除');
+INSERT INTO `db_system_department` VALUES (2, '技术部', 1, '李四', '0571-53421624', '启用', '2号楼421室', '英文名Tech', '编辑删除');
+INSERT INTO `db_system_department` VALUES (3, '人事部', 1, '王五', '0571-98635415', '启用', '3号楼412室', '英文名Pers', '编辑删除');
+INSERT INTO `db_system_department` VALUES (4, '会计部', 3, '戴良', '0571-65823142', '启用', '5号楼632室', '英文名Kuai', '编辑删除');
+
+-- ----------------------------
+-- Table structure for db_system_logger
+-- ----------------------------
+DROP TABLE IF EXISTS `db_system_logger`;
+CREATE TABLE `db_system_logger`  (
+  `id` int(11) NOT NULL COMMENT '主键id',
+  `operate_time` datetime(0) NULL DEFAULT NULL COMMENT '操作时间',
+  `operate_content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作内容',
+  `operate_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作类型',
+  `operator` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作人',
+  `operate_account` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作人账号',
+  `operation` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of db_system_logger
+-- ----------------------------
+INSERT INTO `db_system_logger` VALUES (1, '2018-04-23 21:06:07', '系统管理-人员管理', '修改', '张三', '18268075654', '查看详情');
+
+-- ----------------------------
+-- Table structure for db_system_message
+-- ----------------------------
+DROP TABLE IF EXISTS `db_system_message`;
+CREATE TABLE `db_system_message`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '消息标题',
+  `ctreate_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `origin` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '消息来源',
+  `content` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '消息内容',
+  `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '消息类型',
+  `isReading` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否已读',
+  `user_id` int(255) NULL DEFAULT NULL COMMENT '用户关联id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of db_system_message
+-- ----------------------------
+INSERT INTO `db_system_message` VALUES (1, '系统升级通知', '2018-03-15 18:50:01', '智柔科技', '尊敬的用户，您好！——2018-03-15 21:00:00至2018-03-15 23:00:00期限，系统进行优化升级，届时将无法访问系统，请知悉！——智柔科技——2018-03-15', '通知', '未读', 21);
+INSERT INTO `db_system_message` VALUES (2, '系统升级公告', '2018-03-15 18:50:01', '智柔科技', '尊敬的用户，您好！——2018-03-15 21:00:00至2018-03-15 23:00:00期限，系统进行优化升级，届时将无法访问系统，请知悉！——智柔科技——2018-03-15', '公告', '未读', 21);
+INSERT INTO `db_system_message` VALUES (3, '系统停运通知', '2018-03-15 18:50:01', '智柔科技', '尊敬的用户，您好！——2018-03-15 21:00:00至2018-03-15 23:00:00期限，系统进行优化升级，届时将无法访问系统，请知悉！——智柔科技——2018-03-15', '通知', '已读', 21);
+INSERT INTO `db_system_message` VALUES (4, '系统停运公告', '2018-03-15 18:50:01', '智柔科技', '尊敬的用户，您好！——2018-03-15 21:00:00至2018-03-15 23:00:00期限，系统进行优化升级，届时将无法访问系统，请知悉！——智柔科技——2018-03-15', '公告', '已读', 21);
+
+-- ----------------------------
+-- Table structure for db_system_privilege
+-- ----------------------------
+DROP TABLE IF EXISTS `db_system_privilege`;
+CREATE TABLE `db_system_privilege`  (
+  `id` int(11) NOT NULL COMMENT '主键id',
+  `privilege` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限',
+  `privilege_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限名',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of db_system_privilege
+-- ----------------------------
+INSERT INTO `db_system_privilege` VALUES (1, 'PERM_report', '报告');
+INSERT INTO `db_system_privilege` VALUES (2, 'PERM_temperature', '体温报告');
+INSERT INTO `db_system_privilege` VALUES (3, 'PERM_sleep', '睡眠报告');
+INSERT INTO `db_system_privilege` VALUES (4, 'PERM_electrocardio', '心电报告');
+INSERT INTO `db_system_privilege` VALUES (5, 'PERM_system', '系统');
+INSERT INTO `db_system_privilege` VALUES (6, 'PERM_organization', '组织结构');
+INSERT INTO `db_system_privilege` VALUES (7, 'PERM_permission', '权限管理');
+INSERT INTO `db_system_privilege` VALUES (8, 'PERM_personage', '人员管理');
+INSERT INTO `db_system_privilege` VALUES (9, 'PERM_logger', '操作日志');
+INSERT INTO `db_system_privilege` VALUES (10, 'PERM_setting', '系统设置');
+
+-- ----------------------------
+-- Table structure for db_system_role
+-- ----------------------------
+DROP TABLE IF EXISTS `db_system_role`;
+CREATE TABLE `db_system_role`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `role` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色',
+  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `role_number` int(20) NULL DEFAULT NULL COMMENT '角色人员数',
+  `role_personage` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '选择人员',
+  `privilege_management` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限管理',
+  `operation` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of db_system_role
+-- ----------------------------
+INSERT INTO `db_system_role` VALUES (1, '全科医生', '启用', '2018-03-06 21:59:59', '张三', 10, '1', '1', '编辑删除');
+
+-- ----------------------------
+-- Table structure for db_system_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `db_system_setting`;
+CREATE TABLE `db_system_setting`  (
+  `id` int(11) NOT NULL COMMENT '主键id',
+  `logo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '系统logo',
+  `sysName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '系统名称',
+  `copyright` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '版本信息',
+  `publish_picture` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '宣传图片',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for db_user_help
+-- ----------------------------
+DROP TABLE IF EXISTS `db_user_help`;
+CREATE TABLE `db_user_help`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `suggest` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '建议',
+  `user_id` int(11) NULL DEFAULT NULL COMMENT '用户关联id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for db_user_remain
+-- ----------------------------
+DROP TABLE IF EXISTS `db_user_remain`;
+CREATE TABLE `db_user_remain`  (
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `create_user` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_user` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `extend_1` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `extend_2` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `extend_3` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `delete_flag` int(11) NULL DEFAULT NULL COMMENT '删除标记',
+  `remarks` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `main_user_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户id（关联圈）',
+  `remain_count` int(11) NULL DEFAULT NULL COMMENT '剩余次数',
+  `product_valid` int(11) NULL DEFAULT NULL COMMENT '有效期天数',
+  `end_time` datetime(0) NULL DEFAULT NULL COMMENT '结束时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户剩余问诊次数' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for sys_role
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_role`;
+CREATE TABLE `sys_role`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `role` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色',
+  `role_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色名',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_role
+-- ----------------------------
+INSERT INTO `sys_role` VALUES (1, 'ROLE_admin', '管理员');
+INSERT INTO `sys_role` VALUES (2, 'ROLE_user', '用户');
+
+-- ----------------------------
+-- Table structure for sys_user
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user`;
+CREATE TABLE `sys_user`  (
+  `id` int(64) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `username` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
+  `password` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `isRegister` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_user
+-- ----------------------------
+INSERT INTO `sys_user` VALUES (1, '18268075654', '222222', 'true');
+INSERT INTO `sys_user` VALUES (21, '17600336251', '999999', 'true');
+
+-- ----------------------------
+-- Table structure for sys_user_role
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user_role`;
+CREATE TABLE `sys_user_role`  (
+  `id` int(64) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `user_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '关联user',
+  `role_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '关联角色',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_user_role
+-- ----------------------------
+INSERT INTO `sys_user_role` VALUES (1, '1', '1');
+INSERT INTO `sys_user_role` VALUES (2, '21', '2');
+
+-- ----------------------------
+-- Table structure for sys_vip_management
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_vip_management`;
+CREATE TABLE `sys_vip_management`  (
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `create_user` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_user` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `extend_1` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `extend_2` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `extend_3` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预留扩展字段',
+  `delete_flag` int(11) NULL DEFAULT NULL COMMENT '删除标记',
+  `remarks` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `vip_level` int(11) NULL DEFAULT NULL COMMENT 'vip等级',
+  `vip_empirical_value` int(11) NULL DEFAULT NULL COMMENT 'vip每级所需经验值',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'vip管理' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Procedure structure for NewProc
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `NewProc`;
+delimiter ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `NewProc`(IN `finish_time` datetime,IN `report_time` datetime,OUT `timeLong` int)
+BEGIN
+		set timeLong = finish_time-report_time;
+
+END
+;;
+delimiter ;
+
+SET FOREIGN_KEY_CHECKS = 1;

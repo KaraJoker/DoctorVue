@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chero.client.dao.SysManageRepository">
+    <resultMap id="departmentMap" type="com.chero.client.domain.Department">
+        <id column="id" property="id"/>
+        <result column="department_name" property="departmentName"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="principle" property="principle"/>
+        <result column="department_phone" property="departmentPhone"/>
+        <result column="status" property="status"/>
+        <result column="address" property="address"/>
+        <result column="remarks" property="remarks"/>
+        <result column="operation" property="operation"/>
+
+    </resultMap>
+    <resultMap id="doctorInfoMap" type="com.chero.client.domain.DoctorInfo">
+        <id column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="extend_1" property="extend1"/>
+        <result column="extend_2" property="extend2"/>
+        <result column="extend_3" property="extend3"/>
+        <result column="delete_flag" property="deleteFlag"/>
+        <result column="remarks" property="remarks"/>
+        <result column="real_name" property="realName"/>
+        <result column="mobile" property="mobile"/>
+        <result column="userface" property="userface"/>
+        <result column="gender" property="gender"/>
+        <result column="birthday" property="birthday"/>
+        <result column="subject" property="subject"/>
+        <result column="position" property="position"/>
+        <result column="status" property="status"/>
+        <result column="certificate_type" property="certificateType"/>
+        <result column="certificate_number" property="certificateNumber"/>
+        <result column="id_certificate_photo" property="idCertificatePhoto"/>
+        <result column="registration_certificate_photo" property="registrationCertificatePhoto"/>
+        <result column="title_certificate_photo" property="titleCertificatePhoto"/>
+        <result column="certificate_status" property="certificateStatus"/>
+        <result column="user_id" property="userId"/>
+        <result column="is_register" property="isRegister"/>
+        <result column="is_temporary" property="isTemporary"/>
+    </resultMap>
+    <resultMap id="doctorPrivilegeMap" type="com.chero.client.domain.DoctorPrivilege">
+        <id column="id" property="id"/>
+        <result column="privilege" property="privilege"/>
+        <result column="privilege_name" property="privilegeName"/>
+    </resultMap>
+    <resultMap id="doctorRoleMap" type="com.chero.client.domain.DoctorRole">
+    <id column="role_id" property="roleId"/>
+    <result column="role" property="role"/>
+    <result column="status" property="status"/>
+    <result column="create_time" property="createTime"/>
+    <result column="create_user" property="creator"/>
+    <result column="role_DoctorInfo" property="DoctorInfoListString"/>
+    <result column="privilege_management" property="privilegeListString"/>
+</resultMap>
+    <resultMap id="loggerMap" type="com.chero.client.domain.OperateLogger">
+        <id column="id" property="id"/>
+        <result column="operate_time" property="operateTime"/>
+        <result column="operate_content" property="operateContent"/>
+        <result column="operate_type" property="operateType"/>
+        <result column="operator" property="operator"/>
+        <result column="user_id" property="userId"/>
+        <result column="operate_account" property="operateAccount"/>
+        <result column="operation" property="operation"/>
+        <result column="operation_before" property="operationBefore"/>
+        <result column="operation_after" property="operationAfter"/>
+    </resultMap>
+    <resultMap id="settingMap" type="com.chero.client.domain.Setting">
+        <id column="id" property="id"/>
+        <result column="logo" property="logo"/>
+        <result column="sysName" property="sysName"/>
+        <result column="copyright" property="copyright"/>
+        <result column="publish_picture" property="publishPicture"/>
+    </resultMap>
+    <resultMap id="afficheMap" type="com.chero.client.domain.Affiche">
+        <id column="id" property="id"/>
+        <result column="affiche_name" property="afficheName"/>
+        <result column="status" property="status"/>
+        <result column="send_number" property="sendNumber"/>
+        <result column="send_man" property="sendMan"/>
+        <result column="send_time" property="sendTime"/>
+    </resultMap>
+    <resultMap id="personOpetionMap" type="com.chero.client.domain.PersonOpetion">
+        <result column="doctorinfo_id" property="doctorinfoId"/>
+        <result column="real_name" property="realName"/>
+        <result column="mobile" property="mobile"/>
+        <result column="department_id" property="departmentId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="department_name" property="departmentName"/>
+    </resultMap>
+    <select id="selectDoctorInfoAll" resultMap="doctorInfoMap">
+        SELECT *
+        FROM db_doctor_info AS ddi
+        <if test="departmentId != null">
+        LEFT JOIN db_doctor_department AS ddd
+        ON ddd.user_id=ddi.user_id
+        </if>
+        WHERE ddi.delete_flag = 0
+        <if test="realName != null"> AND ddi.real_name LIKE '%${realName}%'</if>
+        <if test="status != null">
+            and ddi.status = #{status}
+        </if>
+        <if test="status != null">
+            and ddi.status = #{status}
+        </if>
+        <if test="departmentId != null">
+            and ddd.department_id = #{departmentId}
+        </if>
+    </select>
+
+    <select id="selectDoctorInfoAllUser" resultType="com.chero.client.domain.DoctorInfo">
+        select * from db_doctor_info WHERE  user_id=#{userId}
+        <if test="realName != null and realName != ''">
+            and `real_name` = #{realName}
+        </if>
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+    </select>
+
+    <select id="findDoctorInfo" resultMap="doctorInfoMap" parameterType="java.lang.String">
+        SELECT * FROM db_doctor_info WHERE id=#{id}
+    </select>
+
+    <select id="findUserDepartment" resultType="string" parameterType="java.lang.String">
+        SELECT department_id FROM db_doctor_department WHERE user_id=#{userId}
+    </select>
+
+    <select id="findRoleByUserId" resultType="string" parameterType="java.lang.String">
+        SELECT role_id FROM db_doctor_role WHERE user_id=#{userId}
+    </select>
+
+    <select id="findDepartmentByUserId" resultType="string" parameterType="java.lang.String">
+        SELECT department_id FROM db_doctor_department WHERE user_id=#{userId}
+    </select>
+
+    <select id="findPersonMobile" resultType="com.chero.client.domain.DoctorInfo">
+        select * from db_doctor_info WHERE mobile=#{mobile} AND delete_flag = 0
+    </select>
+    <select id="updateDoctorInfoByArray" resultType="java.lang.String">
+        update db_system_department set status=1 WHERE id=#{id}
+    </select>
+    <insert id="addDoctorInfo" parameterType="DoctorInfo">
+        <selectKey keyProperty="id" resultType="string" order="BEFORE">
+            select replace(uuid(), '-', '') as id from dual
+        </selectKey>
+        INSERT INTO db_doctor_info(
+        id,
+        real_name,
+        gender,
+        certificate_type,
+        certificate_number,
+        birthday,
+        subject,
+        position,
+        status,
+        delete_flag,
+        create_time,
+        create_user,
+        user_id
+        )
+        VALUES(
+        #{id},
+        #{realName},
+        #{gender},
+        #{certificateType},
+        #{certificateNumber},
+        #{birthday},
+        #{subject},
+        #{position},
+        #{status},
+        #{deleteFlag},
+        #{createTime},
+        #{createUser},
+        #{userId}
+        )
+    </insert>
+
+    <insert id="addDoctorAndDepartment" parameterType="java.lang.String">
+        INSERT INTO db_doctor_department(
+        user_id,
+        department_id
+        )
+        VALUES(
+        #{userId},
+        #{departmentId}
+        )
+    </insert>
+
+    <delete id="deleteDoctorAndDepartment" parameterType="java.lang.String">
+        DELETE  FROM db_doctor_department
+        WHERE user_id=#{userId}
+    </delete>
+
+    <update id="saveDoctorInfo" parameterType="com.chero.client.domain.DoctorInfo">
+        UPDATE  db_doctor_info
+        <set>
+        <if test="realName != null">`real_name` = #{realName},</if>
+        <if test="gender != null">`gender` = #{gender},</if>
+        <if test="idCard != null">`idCard` = #{idCard},</if>
+        <if test="birthday != null">`birthday` = #{birthday},</if>
+        <if test="subject != null">`subject` = #{subject},</if>
+        <if test="position != null">`position` = #{position},</if>
+        <if test="status != null">`status` = #{status},</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="saveDoctorInfoAndDepartment" parameterType="java.lang.String">
+        UPDATE  db_doctor_info
+        SET department_id = #{departmentId}
+        where user_id=#{userId}
+    </update>
+
+    <!--<update id="saveDoctorInfo" parameterType="java.lang.String">-->
+        <!--UPDATE  db_doctor_info-->
+        <!--<set>-->
+            <!--<if test="mobile != null">`mobile` = #{mobile},</if>-->
+            <!--<if test="name != null">`name` = #{name},</if>-->
+        <!--</set>-->
+        <!--where id=#{id}-->
+    <!--</update>-->
+
+    <update id="deleteDoctorInfo" parameterType="java.lang.String">
+        UPDATE db_doctor_info
+        SET delete_flag = 1
+        WHERE id=#{id}
+    </update>
+    <select id="selectDepartment" resultMap="departmentMap">
+        SELECT * FROM db_system_department
+    </select>
+    <select id="findDepartment" resultMap="departmentMap" parameterType="java.lang.String">
+        SELECT * FROM db_system_department WHERE id=#{id}
+    </select>
+    <delete id="deleteDepartment" parameterType="java.lang.String">
+        DELETE FROM db_system_department WHERE id=#{id}
+    </delete>
+    <insert id="addDepartment" parameterType="com.chero.client.domain.Department">
+        <selectKey keyProperty="id" resultType="string" order="BEFORE">
+            select replace(uuid(), '-', '') as id from dual
+        </selectKey>
+        INSERT INTO db_system_department(
+        id,
+        department_name,
+        parent_id,
+        status,
+        principle,
+        department_phone,
+        address,
+        remarks
+        ) VALUES(
+        #{id},
+        #{departmentName},
+        #{parentId},
+        #{status},
+        #{principle},
+        #{departmentPhone},
+        #{address},
+        #{remarks}
+        )
+    </insert>
+    <insert id="addAffiche" parameterType="com.chero.client.domain.Affiche">
+        <selectKey keyProperty="id" resultType="string" order="BEFORE">
+            select replace(uuid(), '-', '') as id from dual
+        </selectKey>
+        INSERT INTO db_system_affiche(
+        id,
+        affiche_name,
+        status,
+        send_number,
+        send_man,
+        send_time
+        ) VALUES(
+        #{id},
+        #{afficheName},
+        #{status},
+        #{sendNumber},
+        #{sendMan},
+        #{sendTime}
+        )
+    </insert>
+    <select id="findAffiche" resultMap="afficheMap" parameterType="java.lang.String">
+        SELECT * FROM db_system_affiche WHERE id=#{id}
+    </select>
+    <update id="saveDepartment" parameterType="com.chero.client.domain.Department">
+        UPDATE  db_system_department
+        <set>
+            <if test="departmentName != null">`department_name` = #{departmentName},</if>
+            <if test="parentId != null">`parent_id` = #{parentId},</if>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="principle != null">`principle` = #{principle},</if>
+            <if test="departmentPhone != null">`department_phone` = #{departmentPhone},</if>
+            <if test="address != null">`address` = #{address},</if>
+            <if test="remarks != null">`remarks` = #{remarks}</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+    <update id="saveAffiche" parameterType="com.chero.client.domain.Affiche">
+        UPDATE  db_system_affiche
+        <set>
+            <if test="afficheName != null">`affiche_name` = #{afficheName},</if>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="sendNumber != null">`send_number` = #{sendNumber},</if>
+            <if test="sendMan != null">`send_man` = #{sendMan},</if>
+            <if test="sendTime != null">`send_time` = #{sendTime}</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+    <delete id="deleteAffiche" parameterType="java.lang.String">
+        DELETE FROM db_system_affiche WHERE id=#{id}
+    </delete>
+    <select id="selectDoctorRole" resultMap="doctorRoleMap">
+        select * from db_system_role WHERE 1=1
+        <if test="role != null">and role LIKE '%${role}%'</if>
+        <if test="status != null">and `status` = #{status}</if>
+        <if test="startTime != null">and `create_time` >= #{startTime}</if>
+        <if test="endTime != null">and `create_time` &lt;= #{endTime}</if>
+    </select>
+    <select id="findDoctorRole" resultMap="doctorRoleMap">
+        SELECT * FROM db_system_role
+    </select>
+    <select id="findDoctorInfoByUserId" resultMap="doctorInfoMap">
+        SELECT * FROM db_doctor_info WHERE user_id = #{userId}
+    </select>
+    <select id="findDoctorRoleById" resultMap="doctorRoleMap">
+        SELECT * FROM db_system_role WHERE role_id = #{roleId}
+    </select>
+    <insert id="addDoctorRole" >
+        <selectKey keyProperty="roleId" resultType="String" order="BEFORE">
+            select replace(uuid(), '-', '') as role_id from dual
+        </selectKey>
+        INSERT INTO db_system_role(
+        role_id,
+        role,
+        status,
+        privilege_management,
+        create_user,
+        create_time
+        ) VALUES(
+        #{roleId},
+        #{role},
+        #{status},
+        #{privilegeListString},
+        #{createUser},
+        #{createTime}
+        )
+    </insert>
+    <update id="saveDoctorRole" parameterType="com.chero.client.domain.DoctorRole">
+        UPDATE  db_system_role
+        <set>
+            <if test="role != null">`role` = #{role},</if>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="privilegeListString != null">`privilege_management` = #{privilegeListString},</if>
+        </set>
+        WHERE role_id=#{id}
+    </update>
+
+    <select id="findRoleCount" parameterType="String" resultType="java.lang.Integer">
+        SELECT  COUNT(*)
+        FROM db_doctor_role
+        WHERE role_id=#{roleId}
+    </select>
+
+    <delete id="deleteDoctorRoleAndUser" parameterType="java.lang.String">
+        DELETE FROM db_doctor_role WHERE role_id=#{roleId}
+    </delete>
+
+    <delete id="deleteDoctorRole" parameterType="java.lang.String">
+        DELETE FROM db_system_role WHERE role_id=#{roleId}
+    </delete>
+
+    <!--<update id="updateTotalDoctorRolePers" parameterType="com.chero.client.domain.DoctorRole">-->
+        <!--UPDATE  db_system_role SET role_DoctorInfo=#{DoctorInfoListString} WHERE id=#{id}-->
+    <!--</update>-->
+
+    <delete id="deleteTotalDoctorRolePers" parameterType="java.lang.String">
+        DELETE FROM db_doctor_role WHERE role_id=#{roleId}
+    </delete>
+
+    <insert id="updateTotalDoctorRolePers" parameterType="java.lang.String">
+        INSERT INTO db_doctor_role(
+        role_id,
+        user_id
+        )
+        VALUES
+        <foreach collection="userList" item="u" separator=",">
+            (
+            #{roleId} ,
+            #{u}
+            )
+        </foreach>
+
+    </insert>
+
+    <update id="updateTotalDoctorRolePriv" parameterType="String">
+        UPDATE  db_system_role SET privilege_management=#{privilegeListString} WHERE role_id=#{roleId}
+    </update>
+    <select id="selectOperateLogger" resultMap="loggerMap">
+        select * from db_system_logger WHERE 1=1
+        <if test="operator != null and operator!=''">and `operator` = #{operator}</if>
+        <if test="operateAccount != null and operateAccount!=''">and `operate_account` = #{operateAccount}</if>
+        <if test="startTime != null and startTime!=''">and `operate_time` >= #{startTime}</if>
+        <if test="endTime != null and endTime!=''">and `operate_time` &lt;= #{endTime}</if>
+    </select>
+    <select id="findOperateLogger" resultMap="loggerMap" parameterType="java.lang.String">
+        SELECT * FROM db_system_logger WHERE id=#{id}
+    </select>
+    <select id="findSystemSetting" resultMap="settingMap">
+        SELECT * FROM db_system_setting WHERE id= 1
+    </select>
+    <update id="saveSystemSetting" parameterType="com.chero.client.domain.Setting">
+        UPDATE  db_system_setting
+        <set>
+            <if test="logo != null and logo != ''">`logo` = #{logo},</if>
+            <if test="sysName != null and sysName != ''">`sysName` = #{sysName},</if>
+            <if test="copyright != null">`copyright` = #{copyright},</if>
+            <if test="publishPicture != null and publishPicture != ''">`publish_picture` = #{publishPicture},</if>
+        </set>
+        WHERE id = 1
+    </update>
+    <select id="findDoctorInfoOpetion" resultMap="doctorInfoMap">
+            select *
+            FROM  db_doctor_role AS ddr
+            LEFT JOIN db_doctor_info AS ddi
+            ON ddr.user_id=ddi.user_id
+            WHERE ddr.role_id=#{id} AND ddi.delete_flag = 0
+    </select>
+    <select id="findAllDoctorInfo" resultMap="personOpetionMap">
+            select ddi.id as doctorinfo_id,
+            ddi.name,ddi.mobile,
+            dsd.id as department_id,
+            dsd.parent_id,ddi.option,
+            dsd.department_name from db_doctor_info ddi LEFT JOIN db_system_department dsd on ddi.subject=dsd.department_name
+    </select>
+    <select id="findDoctorInfoByArray" resultMap="personOpetionMap" parameterType="java.lang.String">
+            SELECT
+                ddi.id AS doctorinfo_id,
+                ddi.real_name AS real_name,
+                dsd.id AS department_id,
+                dsd.parent_id AS parent_id,
+                dsd.department_name AS department_name
+            FROM
+                db_doctor_department AS ddd
+            LEFT JOIN db_doctor_info AS ddi ON ddi.user_id = ddd.user_id
+            LEFT JOIN db_system_department AS dsd ON dsd.id = ddd.department_id
+            WHERE
+                ddd.department_id = #{departmentId} AND ddi.delete_flag = 0
+    </select>
+    <insert id="saveUserHelpUser">
+        INSERT INTO db_user_help(
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(), '-', '') as id from dual
+        </selectKey>
+        id,
+        suggest,
+        user_id
+        ) VALUES(
+        #{id},
+        #{suggest},
+        #{userId}
+        )
+    </insert>
+    <insert id="addOperateLogger">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(), '-', '') as id from dual
+        </selectKey>
+        INSERT INTO db_system_logger(
+        id,
+        operate_time,
+        operate_content,
+        operate_type,
+        operator,
+        operate_account,
+        operation,
+        operation_before,
+        operation_after
+        )
+        VALUES(
+        #{id},
+        #{operateTime},
+        #{operateContent},
+        #{operateType},
+        #{operator},
+        #{operateAccount},
+        #{operation},
+        #{operationBefore},
+        #{operationAfter}
+        )
+    </insert>
+
+    <select id="findDepartmentSubordinateCount" parameterType="String" resultType="java.lang.Integer">
+        SELECT  COUNT(*)
+        FROM db_system_department
+        WHERE parent_id=#{departmentId}
+    </select>
+
+    <select id="findDepartmentUserCount" parameterType="String" resultType="java.lang.Integer">
+        SELECT  COUNT(*)
+        FROM db_doctor_department
+        WHERE department_id=#{departmentId}
+    </select>
+</mapper>

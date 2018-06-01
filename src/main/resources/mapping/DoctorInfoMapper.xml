@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chero.client.dao.DoctorInfoRepository">
+    <resultMap id="doctorInfoMap" type="com.chero.client.domain.DoctorInfo">
+        <id column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="extend_1" property="extend1"/>
+        <result column="extend_2" property="extend2"/>
+        <result column="extend_3" property="extend3"/>
+        <result column="delete_flag" property="deleteFlag"/>
+        <result column="remarks" property="remarks"/>
+        <result column="real_name" property="realName"/>
+        <result column="userface" property="userface"/>
+        <result column="gender" property="gender"/>
+        <result column="birthday" property="birthday"/>
+        <result column="subject" property="subject"/>
+        <result column="position" property="position"/>
+        <result column="status" property="status"/>
+        <result column="certificate_type" property="certificateType"/>
+        <result column="certificate_number" property="certificateNumber"/>
+        <result column="id_certificate_photo" property="idCertificatePhoto"/>
+        <result column="registration_certificate_photo" property="registrationCertificatePhoto"/>
+        <result column="title_certificate_photo" property="titleCertificatePhoto"/>
+        <result column="certificate_status" property="certificateStatus"/>
+        <result column="user_id" property="userId"/>
+        <result column="is_register" property="isRegister"/>
+        <result column="is_temporary" property="isTemporary"/>
+    </resultMap>
+    <resultMap id="systemRoleMap" type="com.chero.client.domain.SystemRole">
+        <id column="role_id" property="roleId"/>
+        <result column="role" property="role"/>
+        <result column="status" property="status"/>
+        <result column="privilege_management" property="privilegeManagement"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="delete_flag" property="deleteFlag"/>
+        <result column="remarks" property="remarks"/>
+    </resultMap>
+    <sql id="doctorInfoField">
+        create_user,create_time,update_user,update_time,extend_1,extend_2,extend_3,delete_flag,remarks,real_name,mobile,userface,gender,birthday,idCard,subject,position,status,certificate_type,certificate_number,id_certificate_photo,registration_certificate_photo,title_certificate_photo,certificate_status,user_id,is_register,is_temporary
+    </sql>
+    <select id="findById" parameterType="java.lang.String" resultMap="doctorInfoMap">
+        select * from db_doctor_info where id=#{id}
+    </select>
+    <select id="countAll" resultType="java.lang.Integer" >
+        select count(*) from db_doctor_info
+    </select>
+    <select id="findAllUsedUserId" resultType="java.lang.String" >
+        select user_id from db_doctor_info
+        WHERE
+          delete_flag = 0
+          AND
+          status = 1
+    </select>
+    <select id="findAll" resultMap="doctorInfoMap">
+        select * from db_doctor_info WHERE delete_flag = 0
+    </select>
+    <insert id="add" parameterType="DoctorInfo">
+        <selectKey keyProperty="id" resultType="string" order="BEFORE">
+            select replace(uuid(), '-', '') as id from dual
+        </selectKey>
+        insert into db_doctor_info(
+		id,
+		user_id,is_register,is_temporary) values(#{id},#{userId},#{isRegister},#{isTemporary})
+	</insert>
+	<update id="update" parameterType="DoctorInfo">
+		update db_doctor_info 
+		<set> 
+			<if test="createUser != null and createUser != ''">create_user=#{createUser},</if>
+        	<if test="createTime != null ">create_time=#{createTime},</if>
+        	<if test="updateUser != null and updateUser != ''">update_user=#{updateUser},</if>
+        	<if test="updateTime != null ">update_time=#{updateTime},</if>
+        	<if test="extend1 != null and extend1 != ''">extend_1=#{extend1},</if>
+        	<if test="extend2 != null and extend2 != ''">extend_2=#{extend2},</if>
+        	<if test="extend3 != null and extend3 != ''">extend_3=#{extend3},</if>
+        	<if test="deleteFlag != null and deleteFlag != ''">delete_flag=#{deleteFlag},</if>
+        	<if test="remarks != null and remarks != ''">remarks=#{remarks},</if>
+        	<if test="realName != null and realName != ''">real_name=#{realName},</if>
+        	<if test="userface != null and userface != ''">userface=#{userface},</if>
+        	<if test="gender != null and gender != ''">gender=#{gender},</if>
+        	<if test="birthday != null">birthday=#{birthday},</if>
+        	<if test="subject != null and subject != ''">subject=#{subject},</if>
+        	<if test="position != null and position != ''">position=#{position},</if>
+        	<if test="status != null and status != ''">status=#{status},</if>
+        	<if test="certificateType != null and certificateType != ''">certificate_type=#{certificateType},</if>
+        	<if test="certificateNumber != null and certificateNumber != ''">certificate_number=#{certificateNumber},</if>
+        	<if test="idCertificatePhoto != null and idCertificatePhoto != ''">id_certificate_photo=#{idCertificatePhoto},</if>
+        	<if test="registrationCertificatePhoto != null and registrationCertificatePhoto != ''">registration_certificate_photo=#{registrationCertificatePhoto},</if>
+        	<if test="titleCertificatePhoto != null and titleCertificatePhoto != ''">title_certificate_photo=#{titleCertificatePhoto},</if>
+        	<if test="certificateStatus != null and certificateStatus != ''">certificate_status=#{certificateStatus},</if>
+        	<if test="userId != null and userId != ''">user_id=#{userId},</if>
+        	<if test="isRegister != null and isRegister != ''">is_register=#{isRegister},</if>
+        	<if test="isTemporary != null and isTemporary != ''">is_temporary=#{isTemporary}</if>
+		</set>
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from db_doctor_info where id=#{id}
+	</delete>
+    <select id="findByMobile" parameterType="java.lang.String" resultMap="doctorInfoMap">
+		select * from db_doctor_info where mobile=#{mobile}
+	</select>
+    <select id="findDoctorInfoByUserId" parameterType="java.lang.String" resultMap="doctorInfoMap">
+    	select * from db_doctor_info where user_id=#{userId} AND delete_flag = 0;
+	</select>
+    <select id="findSystemRoleByUserId" parameterType="java.lang.String" resultMap="systemRoleMap">
+    	select dsr.role_id,
+    	dsr.role,
+    	dsr.status,
+    	dsr.privilege_management,
+    	dsr.create_user,
+    	dsr.create_time,
+    	dsr.update_user,
+    	dsr.update_time,
+    	dsr.delete_flag,
+    	dsr.remarks
+    	from db_doctor_info ddi,
+    	db_doctor_role ddr,
+    	db_system_role dsr
+    	where
+    	ddi.user_id=ddr.user_id
+    	and ddr.role_id=dsr.role_id
+    	and ddi.user_id=#{userId}
+	</select>
+    <select id="findAdminRoleIdByUserId" parameterType="java.lang.String" resultType="java.lang.String">
+    	select ddr.role_id
+    	from db_doctor_role ddr
+    	where
+            ddr.role_id = 1
+            and
+            ddr.user_id = #{userId}
+	</select>
+
+
+    <insert id="saveInfo" parameterType="com.chero.client.domain.DoctorInfo">
+
+        insert into
+        db_doctor_info(
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(), '-', '') as id from dual
+        </selectKey>
+        id,
+        real_name,
+        certificate_type,
+        certificate_number,
+        id_certificate_photo,
+        registration_certificate_photo,
+        title_certificate_photo,
+        gender,
+        birthday,
+        subject,
+        position,
+        status,
+        user_id,
+        delete_flag,
+        create_time
+        )values(
+        #{id},
+        #{realName},
+        #{certificateType},
+        #{certificateNumber},
+        #{idCertificatePhoto},
+        #{registrationCertificatePhoto},
+        #{titleCertificatePhoto},
+        #{gender},#{birthday},#{subject},#{position},
+        #{status},#{userId},#{deleteFlag},#{createTime}
+        )
+    </insert>
+    <select id="doctorLookRole" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select sys_role_id from db_doctor_dbrole where doctor_id=#{doctorId}
+    </select>
+    <update id="updateInfo" parameterType="DoctorInfo">
+        update db_doctor_info
+        <set>
+			<if test="createUser != null and createUser != ''">create_user=#{createUser},</if>
+        	<if test="createTime != null ">create_time=#{createTime},</if>
+        	<if test="updateUser != null and updateUser != ''">update_user=#{updateUser},</if>
+        	<if test="updateTime != null ">update_time=#{updateTime},</if>
+        	<if test="extend1 != null and extend1 != ''">extend_1=#{extend1},</if>
+        	<if test="extend2 != null and extend2 != ''">extend_2=#{extend2},</if>
+        	<if test="extend3 != null and extend3 != ''">extend_3=#{extend3},</if>
+        	<if test="deleteFlag != null and deleteFlag != ''">delete_flag=#{deleteFlag},</if>
+        	<if test="remarks != null and remarks != ''">remarks=#{remarks},</if>
+        	<if test="realName != null and realName != ''">real_name=#{realName},</if>
+        	<if test="userface != null and userface != ''">userface=#{userface},</if>
+        	<if test="gender != null">gender=#{gender},</if>
+        	<if test="birthday != null">birthday=#{birthday},</if>
+        	<if test="subject != null and subject != ''">subject=#{subject},</if>
+        	<if test="position != null and position != ''">position=#{position},</if>
+        	<if test="status != null and status != ''">status=#{status},</if>
+        	<if test="certificateType != null and certificateType != ''">certificate_type=#{certificateType},</if>
+        	<if test="certificateNumber != null and certificateNumber != ''">certificate_number=#{certificateNumber},</if>
+        	<if test="idCertificatePhoto != null and idCertificatePhoto != ''">id_certificate_photo=#{idCertificatePhoto},</if>
+        	<if test="registrationCertificatePhoto != null and registrationCertificatePhoto != ''">registration_certificate_photo=#{registrationCertificatePhoto},</if>
+        	<if test="titleCertificatePhoto != null and titleCertificatePhoto != ''">title_certificate_photo=#{titleCertificatePhoto},</if>
+        	<if test="certificateStatus != null and certificateStatus != ''">certificate_status=#{certificateStatus},</if>
+        	<if test="userId != null and userId != ''">user_id=#{userId},</if>
+        	<if test="isRegister != null and isRegister != ''">is_tegister=#{isRegister},</if>
+        	<if test="isTemporary != null and isTemporary != ''">is_temporary=#{isTemporary}</if>
+		</set>
+        where  user_id=#{userId}
+    </update>
+</mapper>

@@ -1,0 +1,82 @@
+{"properties": [
+  {
+    "name": "chero.com.chero.security.oauth2.clients[0].clientSecret",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.clients[0].clientSecret'"
+  },
+  {
+    "name": "chero.com.chero.security.oauth2.clients[0].accessTokenValidateSeconds",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.clients[0].accessTokenValidateSeconds'"
+  },
+  {
+    "name": "chero.com.chero.security.oauth2.clients[0].clientId",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.clients[0].clientId'"
+  },
+  {
+    "name": "chero.com.chero.security.oauth2.clients[0].clientSecret",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.clients[0].clientSecret'"
+  },
+  {
+    "name": "chero.com.chero.security.oauth2.clients[1].clientSecret",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.clients[1].clientSecret'"
+  },
+  {
+    "name": "chero.com.chero.security.oauth2.clients[1].accessTokenValidateSeconds",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.clients[1].accessTokenValidateSeconds'"
+  },
+  {
+    "name": "chero.com.chero.security.oauth2.jwtSigningKey",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.jwtSigningKey'"
+  },
+  {
+    "name": "chero.com.chero.security.oauth2.clients[1].clientId",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.clients[1].clientId'"
+  },
+  {
+    "name": "chero.com.chero.security.oauth2.clients[1].clientId",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.clients[1].clientId'"
+  },
+  {
+    "name": "chero.com.chero.security.oauth2.clients[0].clientId",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.clients[0].clientId'"
+  },
+  {
+    "name": "chero.com.chero.security.oauth2.clients[0].clientSecret",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.clients[0].clientSecret'"
+  },
+  {
+    "name": "chero.com.chero.security.oauth2.clients[1].accessTokenValidateSeconds",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.clients[1].accessTokenValidateSeconds'"
+  },
+  {
+    "name": "chero.com.chero.security.oauth2.clients[1].clientSecret",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.oauth2.clients[1].clientSecret'"
+  },
+  {
+    "name": "chero.com.chero.security.code.sms.length",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.code.sms.length'"
+  },
+  {
+    "name": "chero.com.chero.security.code.sms.expireIn",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.code.sms.expireIn'"
+  },
+  {
+    "name": "chero.com.chero.security.code.sms.url",
+    "type": "java.lang.String",
+    "description": "A description for 'chero.com.chero.security.code.sms.url'"
+  }
+]}

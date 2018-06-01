@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chero.client.dao.ReportRepository">
+    <resultMap id="reportMap" type="com.chero.client.domain.Report">
+        <id column="id" property="id"/>
+        <result column="report_name" property="reportName"/>
+        <result column="report_type" property="reportType"/>
+        <result column="patient_account" property="patientAccount"/>
+        <result column="name" property="name"/>
+        <result column="gender" property="gender"/>
+        <result column="age" property="age"/>
+        <result column="report_time" property="reportTime"/>
+        <result column="finish_time" property="finishTime"/>
+        <result column="timeliness" property="timeliness"/>
+        <result column="reader" property="reader"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+    <insert id="addNewReport" parameterType="Report">
+    	<selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+    		select replace(uuid(),'-','') as id from dual
+    	</selectKey>
+        insert into db_report_unscramble(id,report_name,report_type,patient_account,name,gender,age,report_time,finish_time,timeliness,reader,user_id)
+        values(#{id},#{reportName},#{reportType},#{patientAccount},#{name},#{gender},#{age},#{reportTime},#{finishTime},#{timeliness},#{reader},#{userId})
+    </insert>
+    <select id="findReportListByCondition" resultMap="reportMap">
+        select * from db_report_unscramble WHERE 1=1
+        <if test="reportStart != null ">and `report_time` >= #{reportStart}</if>
+        <if test="reportEnd != null ">and `report_time` &lt;= #{reportEnd}</if>
+        <if test="finishStart != null ">and `finish_time` >= #{finishStart}</if>
+        <if test="finishEnd != null ">and `finish_time` &lt;= #{finishEnd}</if>
+        <if test="patientAccount != null and patientAccount != ''">and `patient_account`=#{patientAccount}</if>
+        <if test="timeliness != null ">and `timeliness`=#{timeliness}</if>
+        <if test="reportType != null ">and `report_type`=#{reportType}</if>
+    </select>
+    <!--按年统计及时性-->
+    <select id="findTotalNum" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(*) from db_report_unscramble where Year(finish_time)=#{year}
+    </select>
+    <select id="findTotalTimeliness" resultType="java.lang.Integer">
+        select  count(*)  from db_report_unscramble where timeliness=#{timeliness} and Year(finish_time)=#{year}
+    </select>
+    <!--按月统计及时性-->
+    <resultMap id="monthNumber" type="com.chero.client.domain.MonthNumber">
+        <result property="month" column="month"></result>
+        <result property="number" column="number"></result>
+    </resultMap>
+    <select id="findTotalNumPerMonth" resultType="monthNumber">
+        select Month(finish_time) as month,count(*) as number from db_report_unscramble where Year(finish_time)=#{year} GROUP  BY Month(finish_time)
+    </select>
+    <select id="findTotalTimelinessPerMonth" resultType="monthNumber">
+        select  Month(finish_time) as month,count(*) as number from db_report_unscramble where timeliness=#{timeliness} and Year(finish_time)=#{year} GROUP  BY Month(finish_time)
+    </select>
+    <!--按报告类型统计及时性-->
+    <select id="findTotalNumReportType" resultType="java.lang.Integer">
+        select count(*) from db_report_unscramble where report_type=#{reportType} and Year(finish_time)=#{year}
+    </select>
+    <select id="findTotalTimelinessReportType" resultType="java.lang.Integer">
+        select  count(*)  from db_report_unscramble where report_type=#{reportType} and timeliness=#{timeliness} and Year(finish_time)=#{year}
+    </select>
+    <!--按类型和月份统计及时性-->
+    <select id="findTotalNumPerTypeMonth" resultType="monthNumber">
+        select Month(finish_time) as month,count(*) as number from db_report_unscramble where Year(finish_time)=#{year} and
+        <foreach item="item" index="index" collection="reportType" separator="or">
+            report_type=#{item}
+        </foreach>
+        GROUP  BY Month(finish_time) 
+    </select>
+    <select id="findTotalTimelinessPerTypeMonth" resultType="monthNumber">
+        select  Month(finish_time) as month,count(*) as number from db_report_unscramble where timeliness = #{timeliness} and 
+        <foreach item="item" index="index" collection="reportType" separator="or">
+            report_type=#{item}
+        </foreach>
+        and Year(finish_time) = #{year} GROUP  BY Month(finish_time)
+    </select>
+    <!--按解读人统计及时性-->
+    <resultMap id="readerNumber" type="com.chero.client.domain.ReaderNumber">
+        <result property="reader" column="reader"></result>
+        <result property="number" column="number"></result>
+    </resultMap>
+    <select id="findTotalNumReader" resultType="readerNumber">
+        select reader,count(*) as number from db_report_unscramble GROUP  BY reader
+    </select>
+    <select id="findTotalTimelinessReader" resultType="readerNumber">
+        select  reader,count(*) as number from db_report_unscramble where timeliness=#{timeliness} GROUP  BY reader
+    </select>
+    <!--近一月统计及时性-->
+    <resultMap id="dateNumber" type="com.chero.client.domain.DateNumber">
+        <result property="zdate" column="zdate"></result>
+        <result property="number" column="number"></result>
+    </resultMap>
+    <select id="findTotalNumPerDay" resultMap="dateNumber">
+        select Date(finish_time) as zdate,count(*) as number from db_report_unscramble where DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= Date(finish_time) GROUP  BY Date(finish_time)
+    </select>
+    <select id="findTotalTimelinessPerDay" resultMap="dateNumber">
+        select  Date(finish_time) as zdate,count(*) as number from db_report_unscramble where timeliness=#{timeliness} and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= Date(finish_time) GROUP  BY Date(finish_time)
+    </select>
+</mapper>
